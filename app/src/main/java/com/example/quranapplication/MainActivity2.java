@@ -12,84 +12,74 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.sql.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 
 public class MainActivity2 extends AppCompatActivity {
-
-
     //Declaring the object of the QDH Class so its functions can be utilised
-    QDH s=new QDH();
+    QDH s = new QDH();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
-
-        EditText editText=findViewById(R.id.edt);
-
-
-        Button btn=findViewById(R.id.btn);
-
-        QuranArabicText qat=new QuranArabicText();
+        //Initialzing our references to views
+        EditText editText = findViewById(R.id.edt);
+        Button btn = findViewById(R.id.btn);
+        Button btn2=findViewById(R.id.btn2);
+        ListView list = findViewById(R.id.list2);
+        //Initializing ArabicText
+        QuranArabicText qat = new QuranArabicText();
+        //Getting Data From The Intents
         Intent intent = getIntent();
-        int indexSurah= intent.getIntExtra("index",-1);
+        int indexSurah = intent.getIntExtra("index", -1);
+        int SurahStartIndex = s.getSurahStart(indexSurah);
+        int SurahLength = s.getSurahVerses(indexSurah);
+        int SurahEndIndex = SurahStartIndex + (SurahLength - 1);
+        //Initializing The Array Lists
+        ArrayList<String> Surah = qat.GetData(SurahStartIndex, SurahEndIndex);
+        ArrayList<String> adpt = new ArrayList(Surah);
+        ArrayList<String> bdpt=new ArrayList(Surah);
+        ArrayList<String> atl = new ArrayList<String>();//For Storing the single Selection Of Verse
+        //Setting the Adapter
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, adpt);
+        list.setAdapter(arrayAdapter);
+        btn.setOnClickListener(new View.OnClickListener() {
+                                   @Override
+                                   public void onClick(View view) {
+                                       int val = Integer.parseInt(editText.getText().toString());
+                                       if (val >= 1 && (val + SurahStartIndex) - 1 <= SurahEndIndex) {
+                                           String verse = Surah.get(val - 1);
+                                           atl.add(verse);
+                                           arrayAdapter.clear();
+                                           arrayAdapter.addAll(atl);
+                                           // Notify the adapter that the data has changed
+                                           arrayAdapter.notifyDataSetChanged();
+                                           atl.clear();
+                                           // arrayAdapter.clear();
+                                           //  arrayAdapter.
 
-        int SurahStartIndex=s.getSurahStart(indexSurah);
-        int SurahLength=s.getSurahVerses(indexSurah);
-        System.out.println("The surah start index is "+SurahStartIndex);
-        System.out.println("The Length Of The Surah is "+SurahLength);
-        ListView list=findViewById(R.id.list2);
+                                       } else {
 
-        ArrayList<String>  Surah = qat.GetData(SurahStartIndex,SurahStartIndex+SurahLength);
-        System.out.println("The size of the arraylist is "+Surah.size());
-        for (String element : Surah) {
-            // Do something with each element
-            System.out.println("How is you ");
-            System.out.println(element);
-        }
-ArrayList<String> adpt=new ArrayList(Surah);
+                                           Toast.makeText(MainActivity2.this, "The Verse Does Not Exist", Toast.LENGTH_SHORT).show();
+                                       }
+                                   }
+                               }
+        );
 
-            ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(this,android.R.layout.simple_list_item_1,adpt);
-            list.setAdapter(arrayAdapter);
-            System.out.println("You clicked on :");
-
-
-
-        ArrayList<String> atl=new ArrayList<String>();
-       btn.setOnClickListener(new View.OnClickListener() {
-           @Override
-           public void onClick(View view) {
-
-               int val=Integer.parseInt(editText.getText().toString());
-
-               System.out.println("The verse number is given as follows "+val);
-               if(val>=SurahStartIndex && val<= SurahStartIndex+SurahLength )
-               {
-                   System.out.println("This value should not be out of bound"+val);
-                   String verse=Surah.get(val);
-                   System.out.println(verse);
-                   System.out.println("I am inside the button right now ");
-                   atl.add(verse);
-                   arrayAdapter.clear();
-                   arrayAdapter.addAll(atl);
-
-                   // Notify the adapter that the data has changed
-                   arrayAdapter.notifyDataSetChanged();
-                   atl.clear();
-                  // arrayAdapter.clear();
-                 //  arrayAdapter.
+        btn2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                arrayAdapter.clear();
+                arrayAdapter.addAll(bdpt);
+                arrayAdapter.notifyDataSetChanged();
 
 
-               }
-           }
-       });
-
-
-
-
+            }
+        });
 
 
 
