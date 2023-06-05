@@ -1,7 +1,12 @@
 package com.example.quranapplication;
 
+import static android.content.Intent.getIntent;
+
+import android.content.Intent;
+
 import java.util.List;
 import java.util.ArrayList;
+
 
 
 public class QDH {
@@ -573,13 +578,7 @@ public class QDH {
             list.add(urduSurahNames[index]);
         return list;
     }
-        public int getIndex()
-        {
 
-
-
-
-        }
     public int getSurahStart(int surahNumber) {
 
 

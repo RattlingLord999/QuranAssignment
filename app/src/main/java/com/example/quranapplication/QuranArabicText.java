@@ -1,10 +1,9 @@
 package com.example.quranapplication;
 
+import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by Haq Nawaz on 1/25/2016.
- */
+
 public class QuranArabicText {
     public String[] QuranArabicText = new String[]
             {
@@ -6361,15 +6360,17 @@ public class QuranArabicText {
 
     // String[] subset = Arrays.copyOfRange(QuranArabicText, 10, 20);
 
-    public String[] GetData(int StartIndex, int EndIndex) {
-        List<String> listTemp = null;
+    public ArrayList<String> GetData(int StartIndex, int EndIndex) {
+
+        ArrayList<String> listTemp=new ArrayList<>();
+
 
         for (int i = StartIndex; i < EndIndex; i++) {
             listTemp.add(QuranArabicText[i].toString());
         }
-        String[] list = listTemp.toArray(new String[]{});
 
-        return list;
+
+        return listTemp;
     }
 
 }
